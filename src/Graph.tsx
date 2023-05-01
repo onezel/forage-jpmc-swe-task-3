@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table } from '@finos/perspective';
+import { Table, TableData } from '@finos/perspective';
 import { ServerRespond } from './DataStreamer';
 import { DataManipulator } from './DataManipulator';
 import './Graph.css';
@@ -32,7 +32,7 @@ class Graph extends Component<IProps, {}> {
       trigger_alert: 'float'
     };
 
-    if (window.perspective) {
+    if (window.perspective && window.perspective.worker()) {
       this.table = window.perspective.worker().table(schema);
     }
     if (this.table) {
@@ -57,7 +57,8 @@ class Graph extends Component<IProps, {}> {
     if (this.table) {
       this.table.update([
         DataManipulator.generateRow(this.props.data),
-        ]);
+        ] as unknown as TableData
+      );
     }
   }
 }
